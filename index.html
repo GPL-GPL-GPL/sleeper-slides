@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sleeper Slides</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,6 +14,9 @@
   <div class="logo"><span class="dot"></span> Sleeper Slides</div>
   <div class="topbar-actions">
     <div class="mode-indicator" id="modeIndicator">EDIT</div>
+    <button class="btn" id="undoBtn" title="Undo (Ctrl+Z)">↩ Undo</button>
+    <button class="btn" id="redoBtn" title="Redo (Ctrl+Y)">↪ Redo</button>
+    <button class="btn" id="exportPdfBtn" title="Export as PDF">↓ PDF</button>
     <button class="btn" id="addSlideBtn">+ Slide</button>
     <button class="btn sleeper" id="addSleeperBtn">+ Sleeper</button>
     <button class="btn primary" id="presentBtn">Present</button>
@@ -22,14 +25,19 @@
 
 <!-- ELEMENT TOOLBAR -->
 <div class="element-toolbar" id="elementToolbar">
-  <button class="tool-btn" id="gridToggleBtn" title="Toggle gridlines">⊞ Grid</button>
+  <button class="tool-btn" id="gridToggleBtn" title="Toggle gridlines (G)">⊞ Grid</button>
   <div class="tool-sep"></div>
   <button class="tool-btn" id="addTextBtn" title="Add text box">T Text</button>
+  <button class="tool-btn" id="addRectBtn" title="Add rectangle">▭ Rect</button>
+  <button class="tool-btn" id="addCircleBtn" title="Add circle">◯ Circle</button>
   <button class="tool-btn" id="addImageBtn" title="Import image">⬜ Image</button>
   <button class="tool-btn" id="addVideoBtn" title="Import video">▶ Video</button>
   <div class="tool-sep"></div>
-  <span class="tool-hint">Select element + <kbd>Del</kbd> to remove</span>
+  <span class="tool-hint">Select + <kbd>Del</kbd> remove · <kbd>Ctrl+Z</kbd> undo · <kbd>Ctrl+C/V</kbd> copy/paste</span>
 </div>
+
+<!-- FORMAT BAR -->
+<div class="format-bar" id="formatBar"></div>
 
 <!-- MAIN -->
 <div class="main">
@@ -49,12 +57,14 @@
   </div>
 
   <!-- STAGE -->
-  <div class="stage">
+  <div class="stage" id="stage">
     <div class="slide-canvas" id="slideCanvas">
-      <div class="slide-content" id="slideContent">
-        <h1>Welcome to Sleeper Slides</h1>
-        <p>Add slides to your main deck, then create hidden "sleeper" slides with secret codes. Invoke them mid-presentation when the moment is right.</p>
-      </div>
+      <div class="slide-content" id="slideContent"></div>
+    </div>
+    <!-- NOTES PANEL -->
+    <div class="notes-panel" id="notesPanel" style="display:none">
+      <div class="notes-label">Speaker Notes</div>
+      <textarea class="notes-textarea" id="notesTextarea" placeholder="Add speaker notes for this slide…"></textarea>
     </div>
   </div>
 </div>
@@ -66,13 +76,13 @@
     <span class="slide-counter" id="slideCounter">0 / 0</span>
     <button class="nav-btn" id="nextBtn">→</button>
   </div>
+  <div class="bottom-center">
+    <button class="tool-btn" id="notesToggleBtn" title="Toggle speaker notes">🗒 Notes</button>
+  </div>
   <div class="code-input-area">
     <label for="codeInput">Code</label>
     <input class="code-input" id="codeInput" placeholder="···" maxlength="6" spellcheck="false">
     <button class="return-btn" id="returnBtn">↩ Return</button>
-  </div>
-  <div class="keyboard-hint">
-    <kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>/</kbd> code · <kbd>Esc</kbd> return
   </div>
 </div>
 
@@ -131,6 +141,7 @@
   <button class="fs-return-btn" id="fsReturnBtn">↩ Return to main</button>
   <div class="fs-indicator" id="fsIndicator">SLEEPER ACTIVE</div>
   <div class="fs-counter" id="fsCounter"></div>
+  <div class="fs-anim-hint" id="fsAnimHint">Click to reveal next element</div>
 </div>
 
 <!-- TOAST -->
@@ -139,6 +150,9 @@
 <!-- HIDDEN FILE INPUTS -->
 <input type="file" id="imageFileInput" accept="image/*" style="display:none">
 <input type="file" id="videoFileInput" accept="video/*" style="display:none">
+
+<!-- PRINT CONTAINER (PDF export) -->
+<div id="printSlides"></div>
 
 <script src="slides.js"></script>
 <script src="app.js"></script>
