@@ -20,6 +20,17 @@
   </div>
 </div>
 
+<!-- ELEMENT TOOLBAR -->
+<div class="element-toolbar" id="elementToolbar">
+  <button class="tool-btn" id="gridToggleBtn" title="Toggle gridlines">⊞ Grid</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="addTextBtn" title="Add text box">T Text</button>
+  <button class="tool-btn" id="addImageBtn" title="Import image">⬜ Image</button>
+  <button class="tool-btn" id="addVideoBtn" title="Import video">▶ Video</button>
+  <div class="tool-sep"></div>
+  <span class="tool-hint">Select element + <kbd>Del</kbd> to remove</span>
+</div>
+
 <!-- MAIN -->
 <div class="main">
   <!-- SIDEBAR -->
@@ -92,9 +103,30 @@
   </div>
 </div>
 
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal">
+    <h3>Add Video</h3>
+    <div class="field">
+      <label for="videoUrlField">YouTube / Vimeo URL</label>
+      <input id="videoUrlField" placeholder="https://youtube.com/watch?v=…">
+    </div>
+    <div class="modal-divider">— or upload a file —</div>
+    <div style="display:flex;justify-content:center;margin-bottom:14px;">
+      <button class="btn" id="videoFileBtn">Choose File…</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="videoCancelBtn">Cancel</button>
+      <button class="btn primary" id="videoAddUrlBtn">Add URL</button>
+    </div>
+  </div>
+</div>
+
 <!-- FULLSCREEN PRESENTATION -->
 <div class="fullscreen-overlay" id="fsOverlay">
-  <div class="slide-content" id="fsSlideContent"></div>
+  <div class="fs-canvas-wrapper" id="fsCanvasWrapper">
+    <div class="slide-content" id="fsSlideContent"></div>
+  </div>
   <input class="fs-code-input" id="fsCodeInput" placeholder="···" maxlength="6" spellcheck="false">
   <button class="fs-return-btn" id="fsReturnBtn">↩ Return to main</button>
   <div class="fs-indicator" id="fsIndicator">SLEEPER ACTIVE</div>
@@ -103,6 +135,10 @@
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+<!-- HIDDEN FILE INPUTS -->
+<input type="file" id="imageFileInput" accept="image/*" style="display:none">
+<input type="file" id="videoFileInput" accept="video/*" style="display:none">
 
 <script src="slides.js"></script>
 <script src="app.js"></script>
